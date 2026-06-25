@@ -1,0 +1,49 @@
+version: "3.8"
+
+services:
+  proot-builder:
+    # --- Alpine version & architecture ---
+    image: alpine:3.19
+    platform: linux/amd64
+
+    container_name: proot-builder-amd64
+    stdin_open: true # docker run -i
+    tty: true # docker run -t
+    user: "${UID}:${GID}"
+
+    volumes:
+      - ./proot_amd64_build:/build
+    working_dir: /build
+
+    command:
+      - sh
+      - -c
+      - |
+        apk add --no-cache git
+        git clone https://github.com/proot-me/proot.git
+        cd proot/src/
+        export HOME=/root
+
+        # 1. Prevent git "dubious ownership" noise during build
+        git config --global --add safe.directory /build/proot/src
+
+        # 2. tracee/tracee.c: add missing mem.h for peek_word
+        if ! grep -q '^#include "mem.h"$' tracee/tracee.c; then
+            sed -i '/^#include "tracee\/tracee.h"/a #include "mem.h"' tracee/tracee.c
+        fi
+
+        # 3. cli/cli.c: add missing libgen.h for basename (musl)
+        if ! grep -q '^#include <libgen.h>$' cli/cli.c; then
+            sed -i '/^#include <string.h>/a #include <libgen.h>' cli/cli.c
+        fi
+
+        # 4. syscall/rlimit.c: fix format mismatch (rlim_t is unsigned long long on musl)
+        sed -i 's/%ld bytes/%llu bytes/' syscall/rlimit.c
+
+        apk add build-base linux-headers talloc-dev talloc-static bsd-compat-headers
+
+        # 5. Build
+        make clean
+        make -j$$(nproc) proot \
+          CFLAGS="-std=gnu99 -Wno-error -Wno-deprecated-declarations" \
+          LDFLAGS="-static -Wl,--start-group -ltalloc -Wl,--end-group"
