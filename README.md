@@ -2,9 +2,9 @@
 Репозиторий с файлами OverlayOS.
 
 # Контент
-* [Основная идея](https://github.com/ctOS-devs/overlay_os/README.md#%D0%BE%D1%81%D0%BD%D0%BE%D0%B2%D0%BD%D0%B0%D1%8F-%D0%B8%D0%B4%D0%B5%D1%8F)
-* [Справка для разработчиков](https://github.com/ctOS-devs/overlay_os/README.md#%D1%81%D0%BF%D1%80%D0%B0%D0%B2%D0%BA%D0%B0-%D0%B4%D0%BB%D1%8F-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2)
-* [Справка для пользователей](https://github.com/ctOS-devs/overlay_os/README.md#%D1%81%D0%BF%D1%80%D0%B0%D0%B2%D0%BA%D0%B0-%D0%B4%D0%BB%D1%8F-%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D0%B5%D0%B9)
+* [Основная идея](#%D0%BE%D1%81%D0%BD%D0%BE%D0%B2%D0%BD%D0%B0%D1%8F-%D0%B8%D0%B4%D0%B5%D1%8F)
+* [Справка для разработчиков](#%D1%81%D0%BF%D1%80%D0%B0%D0%B2%D0%BA%D0%B0-%D0%B4%D0%BB%D1%8F-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2)
+* [Справка для пользователей](#%D1%81%D0%BF%D1%80%D0%B0%D0%B2%D0%BA%D0%B0-%D0%B4%D0%BB%D1%8F-%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D0%B5%D0%B9)
 
 ## Основная идея
 Идея в том, чтобы запускать ЛЮБОЕ ПО не используя root, не модифицируя установленный Linux.
@@ -22,7 +22,7 @@
 3. Работать где угодно: /home/user, USB, HD, RAM, ..., ?загрузка по сети?
 
 ## Справка для разработчиков
-[Внутренняя документация](github.com/ctOS-devs/internal_docs) (ОБЯЗАТЕЛЬНА к прочтению)
+[Внутренняя документация](https://github.com/ctOS-devs/internal_docs) (ОБЯЗАТЕЛЬНА к прочтению)
 
 Испоьзовать ЯП: Bash, C/C++ \
 Под вопросом: GAS (GNU Assembler) \
