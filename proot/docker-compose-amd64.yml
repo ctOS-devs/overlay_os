@@ -9,7 +9,9 @@ services:
     container_name: proot-builder-amd64
     stdin_open: true # docker run -i
     tty: true # docker run -t
-    user: "${UID}:${GID}"
+    environment:
+      - UID=${UID:-1000} # Default to 1000 if not set
+      - GID=${GID:-1000}
 
     volumes:
       - ./proot_amd64_build:/build
@@ -47,3 +49,6 @@ services:
         make -j$$(nproc) proot \
           CFLAGS="-std=gnu99 -Wno-error -Wno-deprecated-declarations" \
           LDFLAGS="-static -Wl,--start-group -ltalloc -Wl,--end-group"
+
+        # 6. Give ownership back to the host user
+        chown -R $${UID}:$${GID} /build

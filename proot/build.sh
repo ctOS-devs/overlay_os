@@ -19,6 +19,8 @@ fi
 
 echo "Starting build for architecture: $ARCH"
 
+mkdir "proot_${ARCH}_build"
+
 # Build using docker-compose
 docker-compose -f "$COMPOSE_FILE" up
 
