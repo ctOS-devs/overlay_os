@@ -84,6 +84,12 @@ rt "Copying Alpine rootfs files..." \
 %% cp -a "$SRC_ROOTFS/." "$BUILD_DIR/"
 
 # ------------------------------------------------------------
+# Copy resolv.conf
+# ------------------------------------------------------------
+rt "Copying resolv.conf..." \
+%% cp configs/resolv.conf "$BUILD_DIR/"
+
+# ------------------------------------------------------------
 # Copy PRoot Binary
 # ------------------------------------------------------------
 # Check if source binary exists
