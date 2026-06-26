@@ -4,6 +4,11 @@
 # OOS Build Script
 # ============================================================
 
+# Exit after ANY non-zero status code
+set -e
+
+ROOT=$(pwd)
+
 # Check if rtracker exists
 if [ ! -f "./rtracker" ]; then
     echo "Error: ./rtracker not found in the root directory."
@@ -12,10 +17,10 @@ fi
 
 # Setup rtracker aliases
 shopt -s expand_aliases
-alias rt="./rtracker"
+alias rt="${ROOT}/rtracker"
 
 # ------------------------------------------------------------
-# Step 1: Select Architecture
+# Select Architecture
 # ------------------------------------------------------------
 echo "Select architecture to build:"
 echo "1) amd64"
@@ -44,7 +49,27 @@ BUILD_DIR="OOS_${ARCH}"
 PROOT_DEST_NAME="proot_${ARCH}"
 
 # ------------------------------------------------------------
-# Step 2: Preparation
+# Check and Build Dependencies
+# ------------------------------------------------------------
+
+# 1. Build PRoot if missing
+if [ ! -f "$PROOT_BIN" ]; then
+    echo "PRoot binary not found ($PROOT_BIN). Building..."
+    cd proot
+    rt "Building proot ($ARCH)" \
+        %% ./build.sh "$ARCH"
+    cd $ROOT
+fi
+
+# 2. Download Rootfs if missing
+if [ ! -d "$SRC_ROOTFS" ]; then
+    echo "Rootfs directory not found ($SRC_ROOTFS). Downloading..."
+    rt "Downloading rootfs ($ARCH)" \
+        %% ./download_rootfs.sh "$ARCH"
+fi
+
+# ------------------------------------------------------------
+# Preparation
 # ------------------------------------------------------------
 # Clean previous build if exists
 if [ -d "$BUILD_DIR" ]; then
@@ -53,13 +78,13 @@ if [ -d "$BUILD_DIR" ]; then
 fi
 
 # ------------------------------------------------------------
-# Step 3: Copy Rootfs
+# Copy Rootfs
 # ------------------------------------------------------------
 rt "Copying Alpine rootfs files..." \
 %% cp -a "$SRC_ROOTFS/." "$BUILD_DIR/"
 
 # ------------------------------------------------------------
-# Step 4: Copy PRoot Binary
+# Copy PRoot Binary
 # ------------------------------------------------------------
 # Check if source binary exists
 if [ ! -f "$PROOT_BIN" ]; then
@@ -71,7 +96,7 @@ rt "Copying PRoot binary..." \
 %% cp "$PROOT_BIN" "$BUILD_DIR/$PROOT_DEST_NAME"
 
 # ------------------------------------------------------------
-# Step 5: Copy Init Script
+# Copy Init Script
 # ------------------------------------------------------------
 if [ ! -f "scripts/init.sh" ]; then
     echo "Error: scripts/init.sh not found."
@@ -82,7 +107,7 @@ rt "Copying init script..." \
 %% cp "scripts/init.sh" "$BUILD_DIR/init.sh"
 
 # ------------------------------------------------------------
-# Step 6: Archiving
+# Archiving
 # ------------------------------------------------------------
 read -p "Do you want to archive the build? (y/n): " archive_choice
 
